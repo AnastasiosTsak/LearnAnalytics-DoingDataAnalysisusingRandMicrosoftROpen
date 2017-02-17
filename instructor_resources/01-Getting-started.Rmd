@@ -111,11 +111,3 @@ Nowadays there are R libraries that provide us with ways to handle large dataset
 
 With the data loaded into R, we can now set out to examine its content, which is the subject of the next chapter.
 
-```{r chap01chunk08, include=FALSE}
-# rmarkdown::render("01-Getting-started.Rmd")
-# rmarkdown::render("02-Inspecting-data.Rmd")
-# rmarkdown::render("03-Cleaning-data.Rmd")
-# rmarkdown::render("04-Adding-new-features.Rmd")
-# rmarkdown::render("05-Data-summary-and-analysis.Rmd")
-# rmarkdown::render("06-Review.Rmd")
-```

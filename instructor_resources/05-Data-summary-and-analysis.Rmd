@@ -724,14 +724,11 @@ q3 <- nyc_taxi %>%
   filter(!is.na(pickup_nhood) & !is.na(dropoff_nhood)) %>%
   group_by(pickup_nhood, dropoff_nhood) %>%
   summarize(count = n()) %>%
+  arrange(pickup_nhood, desc(count)) %>%
   group_by(pickup_nhood) %>%
   mutate(proportion = prop.table(count),
-         cum.prop = order_by(desc(proportion), 
-         cumsum(proportion))) %>%
-  group_by() %>%
-  arrange(pickup_nhood, desc(proportion)) %>%
-  group_by(pickup_nhood) %>%
-  filter(row_number() < 11 | cum.prop < .50)
+         cum.prop = cumsum(proportion)) %>%
+  filter(row_number() < 11 & cum.prop < .50)
 
 head(q3)
 ```

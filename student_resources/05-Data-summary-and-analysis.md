@@ -1,7 +1,7 @@
 Data summary and analysis
 ================
 Seth Mottaghinejad
-2017-02-08
+2017-02-17
 
 Let's recap where we are in the process:
 
@@ -49,6 +49,38 @@ str(nyc_taxi)
 ``` r
 head(nyc_taxi, 3)
 ```
+
+    ## # A tibble: 3 × 25
+    ##       pickup_datetime    dropoff_datetime passenger_count trip_distance
+    ##                <dttm>              <dttm>           <int>         <dbl>
+    ## 1 2016-06-21 21:33:52 2016-06-21 21:34:40               5           0.4
+    ## 2 2016-06-08 09:52:19 2016-06-08 10:19:55               1           5.2
+    ## 3 2016-06-14 23:27:22 2016-06-14 23:35:05               1           2.1
+    ##   pickup_longitude pickup_latitude rate_code_id dropoff_longitude
+    ##              <dbl>           <dbl>       <fctr>             <dbl>
+    ## 1              -74            40.7     standard               -74
+    ## 2              -74            40.8     standard               -74
+    ## 3              -74            40.7     standard               -74
+    ##   dropoff_latitude payment_type fare_amount extra mta_tax tip_amount
+    ##              <dbl>       <fctr>       <dbl> <dbl>   <dbl>      <dbl>
+    ## 1             40.7         card         3.0   0.5     0.5       0.86
+    ## 2             40.8         cash        21.5   0.0     0.5         NA
+    ## 3             40.7         card         9.0   0.5     0.5       1.50
+    ##   tolls_amount improvement_surcharge total_amount pickup_hour pickup_dow
+    ##          <dbl>                 <dbl>        <dbl>      <fctr>     <fctr>
+    ## 1            0                   0.3         5.16    6PM-10PM        Tue
+    ## 2            0                   0.3        22.30     5AM-9AM        Wed
+    ## 3            0                   0.3        11.80    10PM-1AM        Tue
+    ##   dropoff_hour dropoff_dow trip_duration    pickup_nhood    dropoff_nhood
+    ##         <fctr>      <fctr>         <int>          <fctr>           <fctr>
+    ## 1     6PM-10PM         Tue            48     Murray Hill         Gramercy
+    ## 2     9AM-12PM         Wed          1656 Upper West Side Garment District
+    ## 3     10PM-1AM         Tue           463 Lower East Side               NA
+    ##   tip_percent
+    ##         <int>
+    ## 1          22
+    ## 2          NA
+    ## 3          14
 
 We divide this chapter into three section:
 
@@ -625,7 +657,7 @@ p <- profr(my_test_function())
 plot(p)
 ```
 
-![](rendered/images/chap05chunk39-1.png)
+![](../images/chap05chunk39-1.png)
 
 1.  Describe what the plot is telling us: what is the bottleneck in getting quantiles?
 
@@ -650,9 +682,9 @@ print(microbenchmark(
 ```
 
     ## Unit: milliseconds
-    ##               expr  min   lq mean median   uq   max neval
-    ##  first(random_vec) 30.3 32.3 37.7   34.3 38.3  58.7    10
-    ##  scond(random_vec) 44.6 57.0 68.4   62.6 64.5 149.7    10
+    ##               expr  min   lq mean median   uq max neval
+    ##  first(random_vec) 28.6 30.3 55.4   47.1 82.6 102    10
+    ##  scond(random_vec) 45.3 47.4 82.6   62.3 95.6 178    10
 
 1.  Describe what the results say? Do the runtimes bear out our intuition?
 
@@ -1172,11 +1204,111 @@ library(dplyr)
 head(filter(nyc_taxi, fare_amount > 500)) # pass data directly to the function
 ```
 
+    ## # A tibble: 6 × 25
+    ##       pickup_datetime    dropoff_datetime passenger_count trip_distance
+    ##                <dttm>              <dttm>           <int>         <dbl>
+    ## 1 2016-06-08 16:40:58 2016-06-08 16:43:46               1           0.0
+    ## 2 2016-06-13 12:08:55 2016-06-13 12:09:45               1           0.4
+    ## 3 2016-06-22 14:53:04 2016-06-22 15:04:21               5           0.0
+    ## 4 2016-06-13 01:14:08 2016-06-13 01:15:34               1           0.0
+    ## 5 2016-06-30 09:28:53 2016-06-30 09:28:53               1           0.0
+    ## 6 2016-05-19 11:24:04 2016-05-20 10:14:22               2           0.0
+    ##   pickup_longitude pickup_latitude rate_code_id dropoff_longitude
+    ##              <dbl>           <dbl>       <fctr>             <dbl>
+    ## 1            -73.9            40.8   negotiated             -73.9
+    ## 2            -73.8            40.6          JFK             -73.8
+    ## 3               NA              NA     standard                NA
+    ## 4            -74.0            40.6   negotiated             -74.0
+    ## 5            -73.9            40.8     standard                NA
+    ## 6            -73.9            40.8     standard             -73.9
+    ##   dropoff_latitude payment_type fare_amount extra mta_tax tip_amount
+    ##              <dbl>       <fctr>       <dbl> <dbl>   <dbl>      <dbl>
+    ## 1             40.8         cash         550     0     0.0         NA
+    ## 2             40.6           NA        8452     0     0.5         NA
+    ## 3               NA         cash         726     0     0.5         NA
+    ## 4             40.6         card         950     0     0.0       49.7
+    ## 5               NA         cash      628545   488     0.5         NA
+    ## 6             40.8         cash         688     0     0.5         NA
+    ##   tolls_amount improvement_surcharge total_amount pickup_hour pickup_dow
+    ##          <dbl>                 <dbl>        <dbl>      <fctr>     <fctr>
+    ## 1            0                   0.3          550    12PM-4PM        Wed
+    ## 2            0                   0.3         8453    9AM-12PM        Mon
+    ## 3            0                   0.3          726    12PM-4PM        Wed
+    ## 4            0                   0.3            1    10PM-1AM        Mon
+    ## 5            0                   0.3       629034     5AM-9AM        Thu
+    ## 6            0                   0.3          688    9AM-12PM        Thu
+    ##   dropoff_hour dropoff_dow trip_duration pickup_nhood dropoff_nhood
+    ##         <fctr>      <fctr>         <int>       <fctr>        <fctr>
+    ## 1     12PM-4PM         Wed           168           NA            NA
+    ## 2     9AM-12PM         Mon            50           NA            NA
+    ## 3     12PM-4PM         Wed           677           NA            NA
+    ## 4     10PM-1AM         Mon            86           NA            NA
+    ## 5      5AM-9AM         Thu             0           NA            NA
+    ## 6     9AM-12PM         Fri         82218           NA            NA
+    ##   tip_percent
+    ##         <int>
+    ## 1          NA
+    ## 2          NA
+    ## 3          NA
+    ## 4           4
+    ## 5          NA
+    ## 6          NA
+
 In the second case, we start a pipeline with the data, followed by the piping function `%>%`, followed by `filter` which now inherits the data from the previous step and only needs the filtering condition.
 
 ``` r
 nyc_taxi %>% filter(fare_amount > 500) %>% head # infer the data from the pipeline
 ```
+
+    ## # A tibble: 6 × 25
+    ##       pickup_datetime    dropoff_datetime passenger_count trip_distance
+    ##                <dttm>              <dttm>           <int>         <dbl>
+    ## 1 2016-06-08 16:40:58 2016-06-08 16:43:46               1           0.0
+    ## 2 2016-06-13 12:08:55 2016-06-13 12:09:45               1           0.4
+    ## 3 2016-06-22 14:53:04 2016-06-22 15:04:21               5           0.0
+    ## 4 2016-06-13 01:14:08 2016-06-13 01:15:34               1           0.0
+    ## 5 2016-06-30 09:28:53 2016-06-30 09:28:53               1           0.0
+    ## 6 2016-05-19 11:24:04 2016-05-20 10:14:22               2           0.0
+    ##   pickup_longitude pickup_latitude rate_code_id dropoff_longitude
+    ##              <dbl>           <dbl>       <fctr>             <dbl>
+    ## 1            -73.9            40.8   negotiated             -73.9
+    ## 2            -73.8            40.6          JFK             -73.8
+    ## 3               NA              NA     standard                NA
+    ## 4            -74.0            40.6   negotiated             -74.0
+    ## 5            -73.9            40.8     standard                NA
+    ## 6            -73.9            40.8     standard             -73.9
+    ##   dropoff_latitude payment_type fare_amount extra mta_tax tip_amount
+    ##              <dbl>       <fctr>       <dbl> <dbl>   <dbl>      <dbl>
+    ## 1             40.8         cash         550     0     0.0         NA
+    ## 2             40.6           NA        8452     0     0.5         NA
+    ## 3               NA         cash         726     0     0.5         NA
+    ## 4             40.6         card         950     0     0.0       49.7
+    ## 5               NA         cash      628545   488     0.5         NA
+    ## 6             40.8         cash         688     0     0.5         NA
+    ##   tolls_amount improvement_surcharge total_amount pickup_hour pickup_dow
+    ##          <dbl>                 <dbl>        <dbl>      <fctr>     <fctr>
+    ## 1            0                   0.3          550    12PM-4PM        Wed
+    ## 2            0                   0.3         8453    9AM-12PM        Mon
+    ## 3            0                   0.3          726    12PM-4PM        Wed
+    ## 4            0                   0.3            1    10PM-1AM        Mon
+    ## 5            0                   0.3       629034     5AM-9AM        Thu
+    ## 6            0                   0.3          688    9AM-12PM        Thu
+    ##   dropoff_hour dropoff_dow trip_duration pickup_nhood dropoff_nhood
+    ##         <fctr>      <fctr>         <int>       <fctr>        <fctr>
+    ## 1     12PM-4PM         Wed           168           NA            NA
+    ## 2     9AM-12PM         Mon            50           NA            NA
+    ## 3     12PM-4PM         Wed           677           NA            NA
+    ## 4     10PM-1AM         Mon            86           NA            NA
+    ## 5      5AM-9AM         Thu             0           NA            NA
+    ## 6     9AM-12PM         Fri         82218           NA            NA
+    ##   tip_percent
+    ##         <int>
+    ## 1          NA
+    ## 2          NA
+    ## 3          NA
+    ## 4           4
+    ## 5          NA
+    ## 6          NA
 
 Piping is especially useful for longer pipelines. Here's an example of a query without piping.
 
@@ -1188,6 +1320,13 @@ summarize( # (3)
 ave_duration = mean(trip_duration), ave_distance = mean(trip_distance))
 ```
 
+    ## # A tibble: 3 × 3
+    ##   payment_type ave_duration ave_distance
+    ##         <fctr>        <dbl>        <dbl>
+    ## 1         card         3808       39.867
+    ## 2         cash        16531        0.104
+    ## 3           NA          494        4.250
+
 To understand the query, we need to work from the inside out: 1. First filter the data to show only fare amounts above $500 2. Group the resulting data by payment type 3. For each group find average trip duration and trip distance
 
 The same query, using piping, looks like this:
@@ -1198,6 +1337,13 @@ nyc_taxi %>%
   group_by(payment_type) %>% # (2)
   summarize(ave_duration = mean(trip_duration), ave_distance = mean(trip_distance)) # (3)
 ```
+
+    ## # A tibble: 3 × 3
+    ##   payment_type ave_duration ave_distance
+    ##         <fctr>        <dbl>        <dbl>
+    ## 1         card         3808       39.867
+    ## 2         cash        16531        0.104
+    ## 3           NA          494        4.250
 
 Instead of working from the inside out, piping allows us to read the code from top to bottom. This makes it easier (1) to understand what the query does and (2) to build upon the query.
 
@@ -1250,6 +1396,13 @@ arrange( # (4)
 desc(ave_duration))
 ```
 
+    ## # A tibble: 3 × 3
+    ##   payment_type ave_duration ave_distance
+    ##         <fctr>        <dbl>        <dbl>
+    ## 1         cash        16531        0.104
+    ## 2         card         3808       39.867
+    ## 3           NA          494        4.250
+
 With the pipeline function, we simply add the pipe to the end of `summarize` and add `arrange` as a new line to the end of the code:
 
 ``` r
@@ -1261,6 +1414,13 @@ q1 <- nyc_taxi %>%
 
 head(q1)
 ```
+
+    ## # A tibble: 3 × 3
+    ##   payment_type ave_duration ave_distance
+    ##         <fctr>        <dbl>        <dbl>
+    ## 1         cash        16531        0.104
+    ## 2         card         3808       39.867
+    ## 3           NA          494        4.250
 
 1.  What are the times of the day and the days of the week with the highest fare per mile of ride?
 
@@ -1275,6 +1435,16 @@ q2 <- nyc_taxi %>%
 head(q2)
 ```
 
+    ## # A tibble: 6 × 4
+    ##   pickup_dow pickup_hour ave_fare_per_mile  count
+    ##       <fctr>      <fctr>             <dbl>  <int>
+    ## 1        Wed    12PM-4PM              7.97 161887
+    ## 2        Wed    9AM-12PM              7.79 121956
+    ## 3        Tue    12PM-4PM              7.73 161322
+    ## 4        Thu    9AM-12PM              7.70 122612
+    ## 5        Thu    12PM-4PM              7.62 165127
+    ## 6        Tue    9AM-12PM              7.53 118885
+
 1.  For each pick-up neighborhood, find the number and percentage of trips that "fan out" into other neighborhoods. Sort results by pickup neighborhood and descending percentage. Limit results to top 50 percent coverage. In other words, show only the top 50 percent of destinations for each pick-up neighborhood.
 
 ``` r
@@ -1282,17 +1452,26 @@ q3 <- nyc_taxi %>%
   filter(!is.na(pickup_nhood) & !is.na(dropoff_nhood)) %>%
   group_by(pickup_nhood, dropoff_nhood) %>%
   summarize(count = n()) %>%
+  arrange(pickup_nhood, desc(count)) %>%
   group_by(pickup_nhood) %>%
   mutate(proportion = prop.table(count),
-         cum.prop = order_by(desc(proportion), 
-         cumsum(proportion))) %>%
-  group_by() %>%
-  arrange(pickup_nhood, desc(proportion)) %>%
-  group_by(pickup_nhood) %>%
-  filter(row_number() < 11 | cum.prop < .50)
+         cum.prop = cumsum(proportion)) %>%
+  filter(row_number() < 11 & cum.prop < .50)
 
 head(q3)
 ```
+
+    ## Source: local data frame [6 x 5]
+    ## Groups: pickup_nhood [2]
+    ## 
+    ##   pickup_nhood     dropoff_nhood count proportion cum.prop
+    ##         <fctr>            <fctr> <int>      <dbl>    <dbl>
+    ## 1 West Village           Chelsea 20870     0.1622    0.162
+    ## 2 West Village           Midtown 14934     0.1161    0.278
+    ## 3 West Village Greenwich Village 11403     0.0886    0.367
+    ## 4 West Village          Gramercy 10077     0.0783    0.445
+    ## 5 East Village          Gramercy 27860     0.1585    0.158
+    ## 6 East Village      East Village 17738     0.1009    0.259
 
 1.  Are any dates missing from the data?
 
@@ -1306,6 +1485,21 @@ nyc_taxi %>%
   mutate(diff = date - lag(date)) %>%
   arrange(desc(diff))
 ```
+
+    ## # A tibble: 182 × 2
+    ##          date   diff
+    ##        <date> <time>
+    ## 1  2016-01-02 1 days
+    ## 2  2016-01-03 1 days
+    ## 3  2016-01-04 1 days
+    ## 4  2016-01-05 1 days
+    ## 5  2016-01-06 1 days
+    ## 6  2016-01-07 1 days
+    ## 7  2016-01-08 1 days
+    ## 8  2016-01-09 1 days
+    ## 9  2016-01-10 1 days
+    ## 10 2016-01-11 1 days
+    ## # ... with 172 more rows
 
 The second solution is more involved. First we create a `data.frame` of all dates available in `nyc_taxi`.
 
@@ -1342,6 +1536,11 @@ nyc_taxi %>%
   summarize(min_date = min(date), max_date = max(date), n = n()) %>%
   mutate(diff = max_date - min_date + 1)
 ```
+
+    ## # A tibble: 1 × 4
+    ##     min_date   max_date     n     diff
+    ##       <date>     <date> <int>   <time>
+    ## 1 2016-01-01 2016-06-30   182 182 days
 
 1.  Find the 3 consecutive days with the most total number of trips?
 
@@ -1392,6 +1591,16 @@ q5 <- nyc_taxi %>%
 head(q5)
 ```
 
+    ## # A tibble: 6 × 4
+    ##   start_date   end_date     n     cn
+    ##       <date>     <date> <int>  <int>
+    ## 1 2016-02-11 2016-02-13 39240 115172
+    ## 2 2016-02-25 2016-02-27 38712 113417
+    ## 3 2016-01-28 2016-01-30 39783 113120
+    ## 4 2016-02-12 2016-02-14 35352 112826
+    ## 5 2016-01-14 2016-01-16 37685 111217
+    ## 6 2016-01-29 2016-01-31 33196 110965
+
 As it turns out, there's already a similar function we could have used, called `rollapply` in the `zoo` package. Sometimes it pays off to take the time and search for the right function, especially if what we're trying to do is common enough that we should not have to "reinvent the wheel".
 
 ``` r
@@ -1420,6 +1629,16 @@ q5 <- nyc_taxi %>%
 head(q5)
 ```
 
+    ## # A tibble: 6 × 4
+    ##   start_date   end_date     n     cn
+    ##       <date>     <date> <int>  <int>
+    ## 1 2016-02-10 2016-02-13 39240 115172
+    ## 2 2016-02-24 2016-02-27 38712 113417
+    ## 3 2016-01-27 2016-01-30 39783 113120
+    ## 4 2016-02-11 2016-02-14 35352 112826
+    ## 5 2016-01-13 2016-01-16 37685 111217
+    ## 6 2016-01-28 2016-01-31 33196 110965
+
 1.  Get the average, standard deviation, and mean absolute deviation of `trip_distance` and `trip_duration`, as well as the ratio of `trip_duration` over `trip_distance`. Results should be broken up by `pickup_nhood` and `dropoff_nhood`.
 
 Here's how we compute the mean absolute deviation:
@@ -1444,6 +1663,26 @@ q6 <- nyc_taxi %>%
 head(q6)
 ```
 
+    ## Source: local data frame [6 x 8]
+    ## Groups: pickup_nhood [1]
+    ## 
+    ##   pickup_nhood dropoff_nhood mean_trip_distance mean_trip_duration
+    ##         <fctr>        <fctr>              <dbl>              <dbl>
+    ## 1 West Village  West Village              0.679                401
+    ## 2 West Village  East Village              1.596                872
+    ## 3 West Village  Battery Park              1.972                664
+    ## 4 West Village Carnegie Hill              5.405               1593
+    ## 5 West Village      Gramercy              1.699                813
+    ## 6 West Village          Soho              1.213                648
+    ##   sd_trip_distance sd_trip_duration mad_trip_distance mad_trip_duration
+    ##              <dbl>            <dbl>             <dbl>             <dbl>
+    ## 1            0.959             3171             0.356               262
+    ## 2            0.457             3175             0.304               314
+    ## 3            0.551             3088             0.385               242
+    ## 4            0.699              529             0.584               387
+    ## 5            0.502             2701             0.362               296
+    ## 6            0.431             2782             0.307               284
+
 You may have noticed that the query we wrote in the last exercise was a little tedious and repetitive. Let's now see a way of rewriting the query using some "shortcut" functions available in `dplyr`:
 
 -   When we apply the same summary function(s) to the same column(s) of the data, we can save a lot of time typing by using `summarize_each` instead of `summarize`. There is also a `mutate_each` function.
@@ -1461,5 +1700,33 @@ q6 <- nyc_taxi %>%
 
 head(q6)
 ```
+
+    ## Source: local data frame [6 x 11]
+    ## Groups: pickup_nhood [1]
+    ## 
+    ##   pickup_nhood dropoff_nhood trip_distance_mean trip_duration_mean
+    ##         <fctr>        <fctr>              <dbl>              <dbl>
+    ## 1 West Village  West Village              0.679                401
+    ## 2 West Village  East Village              1.596                872
+    ## 3 West Village  Battery Park              1.972                664
+    ## 4 West Village Carnegie Hill              5.405               1593
+    ## 5 West Village      Gramercy              1.699                813
+    ## 6 West Village          Soho              1.213                648
+    ##   wait_per_mile_mean trip_distance_sd trip_duration_sd wait_per_mile_sd
+    ##                <dbl>            <dbl>            <dbl>            <dbl>
+    ## 1                -74            0.959             3171          0.00202
+    ## 2                -74            0.457             3175          0.00216
+    ## 3                -74            0.551             3088          0.00181
+    ## 4                -74            0.699              529          0.00204
+    ## 5                -74            0.502             2701          0.00198
+    ## 6                -74            0.431             2782          0.00181
+    ##   trip_distance_mad trip_duration_mad wait_per_mile_mad
+    ##               <dbl>             <dbl>             <dbl>
+    ## 1             0.356               262           0.00153
+    ## 2             0.304               314           0.00174
+    ## 3             0.385               242           0.00142
+    ## 4             0.584               387           0.00160
+    ## 5             0.362               296           0.00153
+    ## 6             0.307               284           0.00140
 
 We can do far more with `dplyr` but we leave it at this for an introduction. The goal was to give the user enough `dplyr` to develop an appreciation and be inspired to learn more.
