@@ -3,6 +3,8 @@ R for Business Analysts
 
 Welcome to R for Business Analysts Repository. You can find the latest materials from the workshop here. This course is intended for data scientists and who want to sharpen their R skills by working on analyzing a real dataset. This course can also be viewed as a preperatory course for learning Microsoft R's `RevoScaleR` package for handling large datasets.
 
+You will find all the rendered course content in `student_resources`. If you wish to run the code you can open the Rmd files in `instructor_resources` in your R IDE.
+
 ## Course overview
 
 Please refer to the [course syllabus](https://microsoft.sharepoint.com/teams/LearnAnalytics/Pages/CourseDetail.aspx#139) for the full syllabus. 
