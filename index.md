@@ -46,10 +46,10 @@ We will follow the following workflow during the course.
 
 # Additional Information for Students
 
-Please follow the instructions [here](https://github.com/Azure/LearnAnalytics-DoingDataAnalysisusingRandMicrosoftROpen/tree/master/student_resources).
+Please follow the instructions [here](https://github.com/Azure/LearnAnalytics-DoingDataAnalysisusingRandMicrosoftROpen/tree/master/student_resources)
 
 # Additional Information for Instructors
 
-Please see the resources available [here](https://github.com/Azure/LearnAnalytics-DoingDataAnalysisusingRandMicrosoftROpen/tree/master/instructor_resources).
+Please see the resources available [here](https://github.com/Azure/LearnAnalytics-DoingDataAnalysisusingRandMicrosoftROpen/tree/master/instructor_resources)
 
 
